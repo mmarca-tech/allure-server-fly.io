@@ -1,0 +1,38 @@
+# fly.toml app configuration file generated for allure-server-flyio on 2025-07-04T15:23:48+03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'allure-server-flyio'
+primary_region = 'arn'
+
+[build]
+  image = 'frankescobar/allure-docker-service'
+
+[env]
+  CHECK_RESULTS_EVERY_SECONDS = '1'
+  KEEP_HISTORY = '1'
+  SECURITY_USER = "testUser"
+  SECURITY_PASS = "testPass123!"
+  SECURITY_ENABLED = '1'
+
+[http_service]
+  internal_port = 5050
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
+
+[[mounts]]
+  source = "allure_data"
+  destination = "/app/projects"
+  initial_size = "1GB"
+  auto_extend_size_threshold = 80  # extend volume size if we reach 80% capacity
+  auto_extend_size_increment = "1GB"
+  auto_extend_size_limit = "3GB"
